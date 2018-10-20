@@ -16,14 +16,16 @@ io.on('connection', function (sock) {
     sock.on('login', (name) => {
         if(Sessions[name]) return sock.emit('login-error', "NAME_ALREADY_TAKEN");
         if(!Users[name]) Users[name] = { admin: false };
-
-        Sessions[name] = {};
+        
+        user = Users[name]
         user.name = name;
+
+        Sessions[name] = { name };
 
         if(user.admin) grantAdmin(sock);
         else grantUser(sock);
  
-        sock.emit('login-success', user = Users[name]);
+        sock.emit('login-success', user);
     });
 
     sock.on('disconnect', () => {
@@ -32,7 +34,7 @@ io.on('connection', function (sock) {
 
 
     function grantAdmin (sock) {
-        
+
     }
 
     function grantUser (sock) {
