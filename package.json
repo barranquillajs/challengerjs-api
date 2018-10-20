@@ -19,5 +19,8 @@
   "homepage": "https://github.com/barranquillajs/challengerjs-api#readme",
   "dependencies": {
     "socket.io": "^2.1.1"
+  },
+  "engines": {
+    "node": "8.10.0"
   }
 }
