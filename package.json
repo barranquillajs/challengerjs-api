@@ -1,0 +1,23 @@
+{
+  "name": "challengerjs-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barranquillajs/challengerjs-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/barranquillajs/challengerjs-api/issues"
+  },
+  "homepage": "https://github.com/barranquillajs/challengerjs-api#readme",
+  "dependencies": {
+    "socket.io": "^2.1.1"
+  }
+}
