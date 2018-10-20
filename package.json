@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/barranquillajs/challengerjs-api#readme",
   "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
     "socket.io": "^2.1.1"
   }
 }
