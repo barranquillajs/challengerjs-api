@@ -10,6 +10,12 @@ let Sessions = {
 
 };
 
+let Challenges = {
+
+};
+
+let current_challenge = null;
+
 io.on('connection', function (sock) {
     let user = null;
 
@@ -34,10 +40,28 @@ io.on('connection', function (sock) {
 
 
     function grantAdmin (sock) {
-
+        sock.on('create', createChallenge);
     }
 
     function grantUser (sock) {
 
     }
+
+    function createChallenge ({ name, description, inputs, outputs, timeout, runs }) {
+        if(!description) description = "";
+        if(!inputs) inputs = [];
+        if(!outputs) outputs = [];
+
+        current_challenge = Challenges[name] = { name, description, inputs, outputs, timeout, runs, submits: {} };
+
+        io.emit('challenge', { name, description, timeout, runs });
+    }
+
+    if(current_challenge)
+        sock.emit('challenge', {
+            name: current_challenge.name,
+            description: current_challenge.description,
+            timeout: current_challenge.timeout,
+            runs: current_challenge.runs
+        });
 });
