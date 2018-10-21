@@ -28,46 +28,54 @@ app.use(function (req, res, next) {
     // res.header('upgrade-insecure-requests')
     next()
   })
-http.listen(800, () => console.log("Server up!"));
+http.listen(7777, () => console.log("Server up!"));
 
 
 io.on('connection', function (sock) {
     let user = null;
+    console.log('user connected')
 
     sock.on('login', (name) => {
         if(Sessions[name]) return sock.emit('login-error', "NAME_ALREADY_TAKEN");
         if(!Users[name]) Users[name] = { admin: false };
-        
+
         user = Users[name]
         user.name = name;
 
         Sessions[name] = { name, sock, admin: user.admin };
 
-        if(user.admin) grantAdmin(sock);
-        else grantUser(sock);
- 
+        if(user.admin) {
+           grantAdmin(sock);
+        } else {
+           grantUser(sock);
+        }
+
         sock.emit('login-success', user);
     });
 
     sock.on('disconnect', () => {
-        if(user) Sessions[name] = user.name;
+        //if(user) Sessions[name] = user.name;
     });
 
 
     function grantAdmin (sock) {
-        sock.on('create', createChallenge);
+      console.log('admin grantend')
+        sock.on('create', (data) => {
+          console.log(data)
+        });
     }
 
     function grantUser (sock) {
         sock.on('submit', submitChallenge);
     }
 
-    function createChallenge ({ name, description, inputs, outputs, timeout, runs }) {
+    function createChallenge ({ name, description, input, output, timeout, runs }) {
+      console.log(name)
         if(!description) description = "";
-        if(!inputs) inputs = [];
-        if(!outputs) outputs = [];
+        if(!input) input = [];
+        if(!output) output = [];
 
-        current_challenge = Challenges[name] = { name, description, inputs, outputs, timeout, runs, submits: {} };
+        current_challenge = Challenges[name] = { name, description, input, output, timeout, runs, submits: {} };
 
         io.emit('challenge', { name, description, timeout, runs });
     }
@@ -102,7 +110,7 @@ io.on('connection', function (sock) {
                     console.log(err);
                     return reject({ code: "COULDNT_WRITE", message: "Cannot write codefile"});
                 }
-                
+
                 let timer = setTimeout(() => {
                     reject({ code: "TIMEOUT", message: "Your code ran too slow."});
                 }, challenge.timeout)
